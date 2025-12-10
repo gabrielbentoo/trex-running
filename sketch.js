@@ -33,6 +33,7 @@ function setup() {
 
     trex = createSprite(50, 160, 20, 50);
     trex.addAnimation("running", trexRunning);
+    trex.addAnimation("collided", trexCollided);
     trex.scale = 0.5;
     trex.x = 50;
     edges = createEdgeSprites();
@@ -80,7 +81,8 @@ function draw() {
         ground.velocityX = 0; 
         cloudsGroup.setVelocityXEach(0);
         obstaclesGroup.setVelocityXEach(0);
-        
+        obstaclesGroup.setLifetimeEach(-1);
+        cloudsGroup.setLifetimeEach(-1);
     }
 
     
