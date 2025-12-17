@@ -14,6 +14,13 @@ const PLAY = 1;
 const END = 0;
 let gameState = PLAY;
 let trexCollided;
+let gameOver;
+let restart;
+let gameOverImg;
+let restartImg;
+let jumpSound;
+let checkPointSound;
+let dieSound;
 
 function preload() {
     trexRunning = loadAnimation("trex1.png","trex3.png", "trex4.png");
@@ -26,6 +33,11 @@ function preload() {
     obstacle5 = loadImage("obstacle1.png");
     obstacle6 = loadImage("obstacle1.png");
     trexCollided = loadAnimation("trex_collided.png");
+    gameOverImg = loadImage("gameOver.png");
+    restartImg = loadImage("restart.png");
+    jumpSound = loadSound("jump.mp3");
+    checkPointSound = loadSound("checkPoint.mp3");
+    dieSound = loadSound("die.mp3");
 }
 
 function setup() {
@@ -47,6 +59,14 @@ function setup() {
     cloudsGroup = new Group();
     trex.setCollider("circle", 0, 0, 40);
 
+    gameOver = createSprite(300, 100);
+    gameOver.addImage(gameOverImg);
+    gameOver.scale = 0.5;
+
+    restart = createSprite(300, 140);
+    restart.addImage(restartImg);
+    restart.scale = 0.5;
+
     //trex.debug = true;
 
 
@@ -60,13 +80,20 @@ function draw() {
     if(gameState === PLAY) {
          ground.velocityX = -6;
 
+        
+        score = score + Math.round(frameCount / 60);
+
+        if(score > 0 && score % 1000 === 0) {
+            checkPointSound.play();
+        }
+        
         if(ground.x < 0) {
             ground.x = ground.width/2;
         }
-        score = score + Math.round(frameCount / 60);
 
         if(keyDown("space") && trex.y >= 100) {
              trex.velocityY = -9;
+             jumpSound.play();
         }
         trex.velocityY = trex.velocityY + 0.9;
         spawnClouds();
@@ -74,7 +101,10 @@ function draw() {
 
         if(obstaclesGroup.isTouching(trex)) {
             gameState = END;
+            dieSound.play();
         }
+        gameOver.visible = false;
+        restart.visible = false;
     }
     else if(gameState === END) {
         trex.changeAnimation("collided", trexCollided);
@@ -83,6 +113,9 @@ function draw() {
         obstaclesGroup.setVelocityXEach(0);
         obstaclesGroup.setLifetimeEach(-1);
         cloudsGroup.setLifetimeEach(-1);
+        trex.velocityY = 0;
+        gameOver.visible = true;
+        restart.visible = true;
     }
 
     
