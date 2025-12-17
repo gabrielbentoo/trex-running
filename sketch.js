@@ -127,6 +127,9 @@ function draw() {
 
     //colisao com chao
     trex.collide(invisibleGround);
+    if(mousePressedOver(restart)) {
+        reset();
+    }
     drawSprites();
 
     
@@ -187,4 +190,15 @@ function spawnObstacles() {
         obstaclesGroup.add(obstacle);
 
     }
+}
+
+function reset() {
+    gameState = PLAY;
+    gameOver.visible = false;
+    restart.visible = false;
+
+    obstaclesGroup.destroyEach();
+    cloudsGroup.destroyEach();
+    trex.changeAnimation("running", trexRunning);
+    score = 0;
 }
