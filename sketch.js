@@ -121,15 +121,16 @@ function draw() {
         trex.velocityY = 0;
         gameOver.visible = true;
         restart.visible = true;
+         if(mousePressedOver(restart)) {
+        reset();
+    }
     }
 
     
 
     //colisao com chao
     trex.collide(invisibleGround);
-    if(mousePressedOver(restart)) {
-        reset();
-    }
+   
     drawSprites();
 
     
